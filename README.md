@@ -2,7 +2,7 @@
 
 > **Classificador de elementos arquitetônicos em plantas CAD usando CLIP + Linear Probing**
 
-Sistema de visão computacional que identifica e classifica automaticamente elementos arquitetônicos (portas, janelas, mobiliário, sanitários, escadas, etc.) em arquivos DXF e plantas SVG/XML da base FloorPlan, utilizando o modelo CLIP da OpenAI como backbone congelado com uma camada de classificação linear treinável.
+Sistema de IA utilizando visão computacional que identifica e classifica automaticamente elementos arquitetônicos (portas, janelas, mobiliário, sanitários, escadas, etc.) em arquivos DXF e plantas SVG/XML da base FloorPlan, utilizando o modelo CLIP da OpenAI como backbone congelado com uma camada de classificação linear treinável.
 
 ---
 
@@ -75,7 +75,7 @@ O fluxo completo vai desde a **extração bruta de imagens** de plantas SVG anot
 │                              │  │  (backbone frozen) │  │           │
 │                              │  │  → 512-d features  │  │           │
 │                              │  └────────┬───────────┘  │           │
-│                              │           │ L2-norm       │           │
+│                              │           │ L2-norm       │          │
 │                              │  ┌────────▼───────────┐  │           │
 │                              │  │  Linear(512→26)    │  │           │
 │                              │  │  (trainable head)  │  │           │
@@ -89,7 +89,7 @@ O fluxo completo vai desde a **extração bruta de imagens** de plantas SVG anot
 ┌─────────────────────────────────────────────────────────────────────┐
 │                      PIPELINE DE INFERÊNCIA                         │
 │                                                                     │
-│  Arquivo .dxf ──► insert_classifier4C.py                           │
+│  Arquivo .dxf ──► insert_classifier4C.py                            │
 │                   ├── renderiza cada bloco INSERT como imagem       │
 │                   ├── passa pelo CLIPClassifier treinado            │
 │                   └── retorna classe + confiança por elemento       │
@@ -103,33 +103,33 @@ O fluxo completo vai desde a **extração bruta de imagens** de plantas SVG anot
 O modelo classifica elementos em **26 classes** (índices 0–25). As classes 0–24 correspondem a elementos arquitetônicos reais; a classe 25 (`unknown`) é reservada para inferência quando a confiança está abaixo do limiar ou o elemento não é reconhecido.
 
 | Índice | Nome da Classe    | Pasta de Treino |
-|-------:|-------------------|:--------------:|
-| 0      | single door       | 1              |
-| 1      | double door       | 2              |
-| 2      | sliding door      | 3              |
-| 3      | folding door      | 4              |
-| 4      | window            | 5              |
-| 5      | bay window        | 6              |
-| 6      | blind window      | 7              |
-| 7      | opening symbol    | 8              |
-| 8      | sofa              | 9              |
-| 9      | bed               | 10             |
-| 10     | chair             | 11             |
-| 11     | table             | 12             |
-| 12     | TV cabinet        | 13             |
-| 13     | wardrobe          | 14             |
-| 14     | gas stove         | 15             |
-| 15     | sink              | 16             |
-| 16     | refrigerator      | 17             |
-| 17     | air conditioner   | 18             |
-| 18     | bath              | 19             |
-| 19     | bath tub          | 20             |
-| 20     | washing machine   | 21             |
-| 21     | squat toilet      | 22             |
-| 22     | urinal            | 23             |
-| 23     | toilet            | 24             |
-| 24     | stairs            | 25             |
-| 25     | **unknown**       | *(inferência)* |
+|-------:|-------------------|:---------------:|
+| 0      | single door       | 1               |
+| 1      | double door       | 2               |
+| 2      | sliding door      | 3               |
+| 3      | folding door      | 4               |
+| 4      | window            | 5               |
+| 5      | bay window        | 6               |
+| 6      | blind window      | 7               |
+| 7      | opening symbol    | 8               |
+| 8      | sofa              | 9               |
+| 9      | bed               | 10              |
+| 10     | chair             | 11              |
+| 11     | table             | 12              |
+| 12     | TV cabinet        | 13              |
+| 13     | wardrobe          | 14              |
+| 14     | gas stove         | 15              |
+| 15     | sink              | 16              |
+| 16     | refrigerator      | 17              |
+| 17     | air conditioner   | 18              |
+| 18     | bath              | 19              |
+| 19     | bath tub          | 20              |
+| 20     | washing machine   | 21              |
+| 21     | squat toilet      | 22              |
+| 22     | urinal            | 23              |
+| 23     | toilet            | 24              |
+| 24     | stairs            | 25              |
+| 25     | **unknown**       | *(inferência)*  |
 
 > **Nota:** A classe `unknown` (índice 25) não possui pasta de treino. Ela é atribuída automaticamente durante a inferência sempre que a confiança máxima do modelo fica abaixo do limiar `UNKNOWN_THRESHOLD = 0.40`.
 
@@ -244,10 +244,10 @@ O script foi projetado para garantir que **todas as 25 classes** tenham exatamen
 3. **Distribuição:** O pool completo é embaralhado com semente fixa (`SEED = 42`) e dividido em:
 
 | Split | Quantidade por classe | Total (25 classes) |
-|-------|----------------------|-------------------|
-| val   | 1.200                | 30.000            |
-| test  | 1.200                | 30.000            |
-| train | 8.000                | 200.000           |
+|-------|----------------------|---------------------|
+| val   | 1.200                | 30.000              |
+| test  | 1.200                | 30.000              |
+| train | 8.000                | 200.000             |
 
 4. **Renomeação padronizada:** Cada arquivo de destino recebe o nome `{class_name}_{N:04d}.png`, garantindo identificação inequívoca.
 
@@ -349,17 +349,17 @@ Dataset PyTorch customizado que recebe arrays de caminhos e labels, abre as imag
 
 #### Configuração via argumentos de linha de comando
 
-| Argumento       | Padrão | Descrição                                          |
-|-----------------|--------|----------------------------------------------------|
-| `--base_path`   | *obrigatório* | Caminho para a raiz do dataset              |
-| `--version`     | `2.0`  | Versão do experimento (define a pasta de saída)    |
-| `--batch_size`  | 64     | Tamanho do batch de treinamento                    |
-| `--lr`          | 1e-3   | Taxa de aprendizado do otimizador Adam             |
-| `--num_epochs`  | 60     | Número máximo de épocas                            |
+| Argumento       | Padrão | Descrição                                             |
+|-----------------|--------|-------------------------------------------------------|
+| `--base_path`   | *obrigatório* | Caminho para a raiz do dataset                 |
+| `--version`     | `2.0`  | Versão do experimento (define a pasta de saída)       |
+| `--batch_size`  | 64     | Tamanho do batch de treinamento                       |
+| `--lr`          | 1e-3   | Taxa de aprendizado do otimizador Adam                |
+| `--num_epochs`  | 60     | Número máximo de épocas                               |
 | `--save_every`  | 5      | Frequência (em épocas) para salvar matriz de confusão |
-| `--patience`    | 8      | Épocas sem melhora antes do early stopping         |
-| `--num_workers` | 6      | Workers para o DataLoader                          |
-| `--early_stop`  | False  | Ativa o early stopping se fornecido               |
+| `--patience`    | 8      | Épocas sem melhora antes do early stopping            |
+| `--num_workers` | 6      | Workers para o DataLoader                             |
+| `--early_stop`  | False  | Ativa o early stopping se fornecido                   |
 
 #### Loop de treinamento
 
@@ -542,7 +542,7 @@ for handle, info in results.items():
   toilet              : 4
   unknown             : 1
   TOTAL               : 30
-========================================
+======================================
 ```
 
 ---
