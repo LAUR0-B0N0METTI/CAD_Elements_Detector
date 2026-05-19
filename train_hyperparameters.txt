@@ -1,0 +1,30 @@
+mkdir -p /home/zeratull/Documentos/01_Projetos/clip_cad_detector/model/logs
+
+nohup python3 train_cl.py \
+  --version 1.0 \
+  --batch_size 64 \
+  --lr 1e-3 \
+  --num_epochs 100 \
+  --save_every 5 \
+  --patience 10 \
+  --num_workers 6 \
+  --early_stop \
+  --base_path /home/zeratull/Documentos/01_Projetos/clip_cad_detector/dataset \
+  > /home/zeratull/Documentos/01_Projetos/clip_cad_detector/model/logs/train_v1.0.log 2>&1 &
+
+echo "PID: $!"
+
+
+tail -f /home/zeratull/Documentos/01_Projetos/clip_cad_detector/model/logs/train_v1.0.log
+
+___________________________________________________________________________________________________________________________________________________
+
+
+nohup python3 train_cl.py \
+  --version 2.0 --batch_size 64 --lr 1e-3 \
+  --num_epochs 60 --save_every 5 --patience 8 \
+  --num_workers 6 --early_stop \
+  --base_path ~/Documentos/01_Projetos/clip_cad_detector/dataset \
+  > ~/Documentos/01_Projetos/clip_cad_detector/model/logs/train_v2.0.log 2>&1 &
+
+  tail -f /home/zeratull/Documentos/01_Projetos/clip_cad_detector/model/logs/train_v2.0.log
