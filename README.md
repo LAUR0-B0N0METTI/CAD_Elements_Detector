@@ -68,19 +68,19 @@ O fluxo completo vai desde a **extração bruta de imagens** de plantas SVG anot
 │  data_utils_cl.py ──► DataLoader ──► CLIPClassifierDataset          │
 │                                            │                        │
 │                                            ▼                        │
-│                              ┌─────────────────────────┐            │
+│                              ┌──────────────────────────┐           │
 │                              │      CLIPClassifier      │           │
 │                              │  ┌────────────────────┐  │           │
 │                              │  │  CLIP ViT-B/32     │  │           │
 │                              │  │  (backbone frozen) │  │           │
 │                              │  │  → 512-d features  │  │           │
 │                              │  └────────┬───────────┘  │           │
-│                              │           │ L2-norm       │          │
+│                              │           │ L2-norm      |           │
 │                              │  ┌────────▼───────────┐  │           │
 │                              │  │  Linear(512→26)    │  │           │
 │                              │  │  (trainable head)  │  │           │
 │                              │  └────────────────────┘  │           │
-│                              └─────────────────────────┘            │
+│                              └──────────────────────────┘           │
 │                                            │                        │
 │                              train_cl.py ──┘                        │
 │                           (Adam + CrossEntropy)                     │
